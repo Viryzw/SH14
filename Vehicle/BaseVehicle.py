@@ -4,9 +4,8 @@ class BaseVehicle:
     def __init__(self, init_position, init_theta, max_turn_radius, dt):
         """
         初始化对象状态。
-        :param x: 初始位置 x 坐标
-        :param y: 初始位置 y 坐标
-        :param theta: 初始朝向角度（单位：弧度）
+        :param init_position: 初始位置 [x, y]
+        :param init_theta: 初始朝向角度（单位：弧度）
         :param max_turn_radius: 最小允许的转弯半径（单位：米），对应最大角速度限制
         """
         self.position = init_position  # 位置为列表 [x, y]
@@ -31,6 +30,7 @@ class BaseVehicle:
 
         # 更新朝向
         self.vehicle_heading += omega * self.dt
+        # 规范化至 [-pi, pi]
         self.vehicle_heading = (self.vehicle_heading + math.pi) % (2 * math.pi) - math.pi
 
         # 更新位置

@@ -43,9 +43,9 @@ class Manager:
             self.trajectory_visible.append(False)
 
     def init_targets(self, target_list, t):
-        for id_, pos, theta in target_list:
+        for id_ in target_list:
             id_ = str(id_)
-            obj = Target(init_position=pos, init_theta=theta, id=id_, init_t=t)
+            obj = Target(id=id_, init_t=t)
             self.targets[id_] = obj
             self.labels.append(f"Target{id_}")
             self.point_colors.append("k")
@@ -132,7 +132,7 @@ class Manager:
             elif typ.lower() == "target":
                 target = self.targets.get(id_)
                 if target:
-                    target.update(v, omega)
+                    target.update()
 
         # 计分更新
         for target in self.targets.values():
@@ -192,14 +192,29 @@ class Manager:
             return vehicle.detected
         return None
 
-    def get_captured(self, typ, id_):
+    # def get_captured(self, typ, id_):
+    #     """
+    #     获取指定 USV 的捕获目标列表
+    #     """
+    #     vehicle = self.vehicles.get((typ.lower(), str(id_)))
+    #     if vehicle and hasattr(vehicle, 'captured'):
+    #         return vehicle.captured
+    #     return None
+    def get_captured(self, typ):
         """
-        获取指定 USV 的捕获目标列表
+        获取 USV 1、2、3、4 的捕获目标列表总和（去重）
         """
-        vehicle = self.vehicles.get((typ.lower(), str(id_)))
-        if vehicle and hasattr(vehicle, 'captured'):
-            return vehicle.captured
-        return None
+        all_captured = []
+
+        for id_ in ['1', '2', '3', '4']:
+            vehicle = self.vehicles.get((typ.lower(), str(id_)))
+            if vehicle and hasattr(vehicle, 'captured'):
+                all_captured.extend(vehicle.captured)
+
+        # 去重
+        total_captured = list(set(all_captured))
+        return total_captured
+
 
     def get_state(self, typ, id_):
         """
@@ -218,7 +233,7 @@ class Manager:
             if id_ in self.targets:
                 print(f"目标 {id_} 已存在，跳过添加。")
                 continue
-            obj = Target(init_position=pos, init_theta=theta, id=id_, init_t=t)
+            obj = Target(id=id_, init_t=t)
             self.targets[id_] = obj
 
             label = f"Target{id_}"

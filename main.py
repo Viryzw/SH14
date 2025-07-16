@@ -4,7 +4,7 @@ from Utils.Refresher import TargetRefresher
 
 # 初始化系统
 manager = Manager()
-refresher = TargetRefresher(min_interval=200, max_interval=600)
+refresher = TargetRefresher()
 
 # UAV 和 USV 初始配置
 uavs = [
@@ -17,23 +17,28 @@ usvs = [
     ["3", [0, 4130], 0],
     ["4", [0, 3130], 0]
 ]
+targets = [
+    ["1"],
+    ["2"]
+]
 
 # 初始化对象
-manager.init_objects(uavs, usvs, t=0)
+manager.init_objects(uavs, usvs, targets, 0)
 
 # 主仿真循环
 max_step = 144000
 log_interval = 1
-target_refresh_enabled = True
 capture_count = 0
 
 for step in range(max_step):
     # 控制信息（模拟简单控制）
     controls = [
-        ["uav", "1", 0, 0],
-        ["uav", "2", 0, 0],
-        ["usv", "1", 100, 0],
-        ["usv", "2", 0, 0],
+        ["uav", "1", 50, 0],
+        ["uav", "2", 50, 0],
+        ["usv", "1", 50, 0],
+        ["usv", "2", 50, 0],
+        ["usv", "3", 50, 0],
+        ["usv", "4", 50, 0],
     ]
 
     # 所有目标以固定速度前进
@@ -44,11 +49,9 @@ for step in range(max_step):
     manager.update(controls, t=step)  # 时间步长0.05s
 
     # 自动刷新目标
-    if target_refresh_enabled:
-        new_targets = refresher.refresh(step)
-        if new_targets:
-            print(f"[Step {step}] 新目标加入: {new_targets}")
-            manager.add_targets(new_targets, step)
+    refresher.isValid(manager.targets)
+    refresher.isCaptured(manager.targets)
+    refresher.refresh(manager.targets, step)
 
     # 每 log_interval 步打印一次系统状态
     if step % log_interval == 0:
@@ -56,10 +59,14 @@ for step in range(max_step):
         for uid in ['1', '2']:
             detected = manager.get_detected('uav', uid)
             print(f"UAV {uid} 探测到目标: {detected}")
-        for uid in ['1', '2']:
-            captured = manager.get_captured('usv', uid)
-            print(f"USV {uid} 捕获的目标: {captured}")
-        print(f"当前剩余目标数: {len(manager.targets)}")
+        # for uid in ['1', '2', '3', '4']:
+        #     captured = manager.get_captured('usv', uid)
+        #     print(f"USV {uid} 捕获的目标: {captured}")
+        captured = manager.get_captured('usv')
+        print(f"USV捕获的目标: {captured}")
+        # print(f"当前剩余目标数: {len(manager.targets)}")
+        for key, value in manager.targets.items():
+            print(f"当前目标状态--key: {key}, value: {value.position}")
     print(f"探测时间记录: {manager.time1}")
     print(f"捕获时间记录: {manager.time2}")
     

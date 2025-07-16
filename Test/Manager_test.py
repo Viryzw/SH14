@@ -17,11 +17,8 @@ def main():
         ["1", [0, 4635], 0],
         ["2", [2000, 4935], 0]
     ]
-    targets = [
-        ["1", [4000, 4635], 0]
-    ]
 
-    manager.init_objects(uavs, usvs, targets)
+    manager.init_objects(uavs, usvs)
 
     for step in range(100000):
         controls = [
@@ -29,7 +26,6 @@ def main():
             ["uav", "2", 0, 0],
             ["usv", "1", 100, 0],
             ["usv", "2", 0, 0],
-            ["target", "1", 0, 0],
         ]
 
         manager.update(controls)
