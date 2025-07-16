@@ -50,7 +50,7 @@ for step in range(max_step):
 
     # 自动刷新目标
     refresher.isValid(manager.targets)
-    refresher.isCaptured(manager.targets)
+    refresher.isCaptured(manager.targets, manager.captured)
     refresher.refresh(manager.targets, step)
 
     # 每 log_interval 步打印一次系统状态
@@ -62,11 +62,11 @@ for step in range(max_step):
         # for uid in ['1', '2', '3', '4']:
         #     captured = manager.get_captured('usv', uid)
         #     print(f"USV {uid} 捕获的目标: {captured}")
-        captured = manager.get_captured('usv')
-        print(f"USV捕获的目标: {captured}")
+        manager.captured = manager.get_captured('usv')
+        print(f"USV捕获的目标: {manager.captured}")
         # print(f"当前剩余目标数: {len(manager.targets)}")
         for key, value in manager.targets.items():
-            print(f"当前目标状态--key: {key}, value: {value.position}")
+            print(f"当前目标状态--key: {key}, value: {value.position}, start:{value.coords_list[0]}")
     print(f"探测时间记录: {manager.time1}")
     print(f"捕获时间记录: {manager.time2}")
     

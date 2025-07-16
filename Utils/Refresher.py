@@ -17,9 +17,10 @@ class TargetRefresher:
                 self.target_refresh_enabled = True
                 
     def isCaptured(self, targets, captured):
-        for target_id in targets.keys():
-            if target_id in captured:
-                self.target_refresh_enabled = True
+        if captured != None:
+            for target_id in targets.keys():
+                if target_id in captured:
+                    self.target_refresh_enabled = True
                 
     def refresh(self, targets, t):
         if self.target_refresh_enabled == True:

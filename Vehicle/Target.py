@@ -38,6 +38,10 @@ class Target():
         newy = y1 + self.max_speed * math.sin(angle) * self.dt
 
         self.position = (newx, newy)
+        
+        if math.hypot(dx, dy) < 0.5:
+            self.current_index += 1
+            return
 
     def score_update(self, t, detect, capture):
         if detect:

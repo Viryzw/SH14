@@ -11,6 +11,7 @@ class Manager:
     def __init__(self):
         self.vehicles = {}  # (type,id) -> object
         self.targets = {}   # id -> object
+        self.captured = None
         self.visualizer = None
         self.labels = []
         self.point_colors = []
