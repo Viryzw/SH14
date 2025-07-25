@@ -17,10 +17,7 @@ usvs = [
     ["3", [0, 4130], 0],
     ["4", [0, 3130], 0]
 ]
-targets = [
-    '1',
-    '2'
-]
+targets = ['1','2']
 
 # 初始化对象
 manager.init_objects(uavs, usvs, targets, t=0)

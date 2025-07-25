@@ -74,6 +74,7 @@ class Manager:
         
 
     def init_objects(self, uavs, usvs, targets, t):
+        self.labels = []
         self.init_uavs(uavs)
         self.init_usvs(usvs)
         self.init_targets(targets, t)
